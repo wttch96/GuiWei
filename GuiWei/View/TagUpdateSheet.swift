@@ -6,19 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
+
 
 struct TagUpdateSheet: View {
-    
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var name: String = ""
+    @State private var color: Color = .cyan
     
     var body: some View {
         NavigationStack {
             Form {
                 LabeledContent("名称") {
-                    TextField("标签名称", text: .constant("test"))
+                    TextField("标签名称", text: $name)
                     
                 }
-                ColorPicker("标签颜色", selection: .constant(.red), supportsOpacity: false)
+                ColorPicker("标签颜色", selection: $color, supportsOpacity: false)
             }
             .listStyle(.automatic)
             .navigationTitle("加入网络")

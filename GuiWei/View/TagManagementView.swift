@@ -7,22 +7,18 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct TagManagementView: View {
     @State private var searchText = ""
     
     @State private var showTagUpdateSheet = false
     
-    // 模拟数据
-    let tags = [
-        (name: "重要", count: 12, color: Color.red),
-        (name: "常用", count: 45, color: Color.blue),
-        (name: "易碎", count: 5, color: Color.orange),
-        (name: "电子产品", count: 28, color: Color.purple),
-        (name: "说明书", count: 8, color: Color.gray)
-    ]
+    @Query private var tags: [Tag] = []
     
-    var filteredTags: [(name: String, count: Int, color: Color)] {
+    // 模拟数据
+    
+    var filteredTags: [Tag] {
         if searchText.isEmpty { return tags }
         return tags.filter { $0.name.contains(searchText) }
     }
@@ -40,8 +36,8 @@ struct TagManagementView: View {
                         }
                         Divider()
                         VStack(alignment: .leading) {
-                            Text("\(tags.map({$0.count}).reduce(0, +))")
-                                .font(.system(.title, design: .rounded)).bold()
+//                            Text("\(tags.map({$0.count}).reduce(0, +))")
+//                                .font(.system(.title, design: .rounded)).bold()
                             Text("已关联物品").font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -57,7 +53,7 @@ struct TagManagementView: View {
                             HStack {
                                 // 标签颜色指示器
                                 Circle()
-                                    .fill(tag.color)
+                                    // .fill(tag.color)
                                     .frame(width: 8, height: 8)
                                 
                                 Text(tag.name)
@@ -66,12 +62,12 @@ struct TagManagementView: View {
                                 Spacer()
                                 
                                 // 计数气泡
-                                Text("\(tag.count)")
-                                    .font(.caption2.bold())
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color(.systemGray5))
-                                    .clipShape(Capsule())
+//                                Text("\(tag.count)")
+//                                    .font(.caption2.bold())
+//                                    .padding(.horizontal, 8)
+//                                    .padding(.vertical, 4)
+//                                    .background(Color(.systemGray5))
+//                                    .clipShape(Capsule())
                             }
                             ColorPicker("", selection: .constant(.blue))
                         }
@@ -108,4 +104,14 @@ struct TagManagementView: View {
 
 #Preview {
     TagManagementView()
+        .modelContainer(
+            try! ModelContainer(
+                for: Schema([
+                    Tag.self
+                ]),
+                configurations: [
+                    ModelConfiguration(isStoredInMemoryOnly: true)
+                ]
+            )
+        )
 }
