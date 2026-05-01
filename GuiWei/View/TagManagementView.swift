@@ -11,6 +11,8 @@ import SwiftUI
 struct TagManagementView: View {
     @State private var searchText = ""
     
+    @State private var showTagUpdateSheet = false
+    
     // 模拟数据
     let tags = [
         (name: "重要", count: 12, color: Color.red),
@@ -71,6 +73,7 @@ struct TagManagementView: View {
                                     .background(Color(.systemGray5))
                                     .clipShape(Capsule())
                             }
+                            ColorPicker("", selection: .constant(.blue))
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) { /* 删除逻辑 */ } label: {
@@ -88,12 +91,17 @@ struct TagManagementView: View {
             .searchable(text: $searchText, prompt: "搜索标签")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(action: {}) {
+                    Button(action: {
+                        showTagUpdateSheet.toggle()
+                    }) {
                         Image(systemName: "square.badge.plus")
                     }
                 }
             }
         }
+        .sheet(isPresented: $showTagUpdateSheet, content: {
+            TagUpdateSheet()
+        })
     }
 }
 
