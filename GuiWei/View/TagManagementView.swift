@@ -11,9 +11,9 @@ import SwiftData
 
 struct TagManagementView: View {
     @State private var searchText = ""
-    
     @State private var showTagUpdateSheet = false
     
+    @Environment(\.modelContext) private var modelContext
     @Query private var tags: [Tag] = []
     
     // 模拟数据
@@ -53,11 +53,15 @@ struct TagManagementView: View {
                             HStack {
                                 // 标签颜色指示器
                                 Circle()
-                                    // .fill(tag.color)
+                                    .fill(Color.init(hex: tag.color!)!)
                                     .frame(width: 8, height: 8)
                                 
                                 Text(tag.name)
                                     .font(.body)
+                                
+                                Text(tag.remark)
+                                    .font(.caption)
+                                    .foregroundStyle(.gray)
                                 
                                 Spacer()
                                 
@@ -69,10 +73,12 @@ struct TagManagementView: View {
 //                                    .background(Color(.systemGray5))
 //                                    .clipShape(Capsule())
                             }
-                            ColorPicker("", selection: .constant(.blue))
                         }
                         .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) { /* 删除逻辑 */ } label: {
+                            Button(role: .destructive) {
+                                modelContext.delete(tag)
+                                try? modelContext.save()
+                            } label: {
                                 Label("删除", systemImage: "trash")
                             }
                             Button { /* 修改颜色或更名 */ } label: {
@@ -90,7 +96,7 @@ struct TagManagementView: View {
                     Button(action: {
                         showTagUpdateSheet.toggle()
                     }) {
-                        Image(systemName: "square.badge.plus")
+                        Image(systemName: "plus.circle")
                     }
                 }
             }
