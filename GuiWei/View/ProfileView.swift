@@ -39,4 +39,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .accessibilityHidden(true)
 }

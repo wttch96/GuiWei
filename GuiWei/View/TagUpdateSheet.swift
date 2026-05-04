@@ -14,23 +14,30 @@ struct TagUpdateSheet: View {
     @Environment(\.modelContext) private var modelContext
     
     @State private var name: String = ""
-    @State private var color: Color = .cyan
+    @State private var color: Color = .black
     @State private var remark: String = ""
     
     var body: some View {
         NavigationStack {
             Form {
                 VStack(alignment: .leading, spacing: 4) {
-                    LabeledContent("名称") {
+                    LabeledContent(content: {
                         TextField("标签名称", text: $name)
-                    }
+                    }, label: {
+                        HStack {
+                            Circle()
+                                .fill(color)
+                                .frame(width: 8, height: 8)
+                            Text("名称")
+                        }
+                    })
                     if name.isEmpty {
                         Text("请输入标签名称")
                             .font(.caption)
                             .foregroundStyle(.red)
                     }
                 }
-                ColorPicker("标签颜色", selection: $color, supportsOpacity: false)
+                ColorPicker("选择颜色", selection: $color, supportsOpacity: false)
                 LabeledContent("备注") {
                     TextField("标签备注", text: $remark)
                 }
@@ -69,8 +76,10 @@ struct TagUpdateSheet: View {
     }
 }
 
+
+/// 包装一个预览视图，直接展示 TagUpdateSheet 的样式和功能
 fileprivate struct PreviewWrapper: View {
-    @State private var showSheet = false
+    @State private var showSheet = true
     var body: some View {
         VStack {
             Button(action: {
